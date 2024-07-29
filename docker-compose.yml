@@ -1,0 +1,33 @@
+#version: '3.8' ==> this is obsolete
+services:
+  bookstore:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=default
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+    depends_on:
+      - mysql #To connect Spring Docker Container to mysql Container, we need Bridge Container.
+    networks:
+      - bookstore-network  #bridge network name, where containers communicate
+
+  mysql:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "13306:3306"
+    networks:
+      - bookstore-network #bridge network name, where containers communicate
+
+networks:
+  bookstore-network: #bridge network name, where containers communicate
+    driver: bridge
