@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-#
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -27,6 +27,9 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3.1.0
+#Add this step to grant execute permissions to the 'gradlew' script before you attempt to run it.
+      - name: Make Gradle Wrapper Executable
+        run: chmod +x ./gradlew
 
       - name: Build with Gradle Wrapper
         run: ./gradlew build
@@ -48,3 +51,7 @@ jobs:
 
       - name: Generate and Submit Dependency Graph
         uses: gradle/actions/dependency-submission@v3.1.0
+
+
+#chmod +x ./gradlew is set to execute permissions : Make Gradle Wrapper Executable
+#With this, we can prevent leading to "Permission denied" error.
